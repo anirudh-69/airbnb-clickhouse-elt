@@ -1,0 +1,35 @@
+services:
+  clickhouse_server:
+    image: clickhouse/clickhouse-server:latest
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./docker/clickhouse/init:/docker-entrypoint-initdb.d:rw
+    environment:
+      - CLICKHOUSE_DB=airbnb_analytics
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+      - CLICKHOUSE_USER_CONFIG=<clickhouse><users><default><access_management>1</access_management><named_collection_control>1</named_collection_control><show_named_collections>1</show_named_collections><show_named_collections_secrets>1</show_named_collections_secrets></default></users></clickhouse>
+    networks:
+      - clickhouse-network
+
+  dlt_pipeline:
+    build: .
+    depends_on:
+      - clickhouse_server
+    networks:
+      - clickhouse-network
+    volumes:
+      - ./data:/app/data
+    environment:
+      - CLICKHOUSE_USER=dlt_user
+      - CLICKHOUSE_PASSWORD=dlt_password
+      - CLICKHOUSE_DB=airbnb_analytics
+
+networks:
+  clickhouse-network:
+
+volumes:
+  clickhouse_data:

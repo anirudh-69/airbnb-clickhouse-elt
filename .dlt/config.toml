@@ -1,0 +1,9 @@
+[runtime]
+log_level="INFO"
+dlthub_telemetry = true
+
+# Added logging configuration
+[logging]
+log_file = "logs/app.log"  # Specify the log file path
+log_rotation = "daily"       # Rotate logs daily
+log_max_size = "10MB"        # Maximum size of log file before rotation

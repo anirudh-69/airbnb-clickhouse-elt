@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS airbnb_analytics;
+CREATE USER IF NOT EXISTS dlt_user IDENTIFIED BY 'dlt_password';
+GRANT CURRENT GRANTS ON *.* TO dlt_user;
